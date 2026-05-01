@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+    <title>Controle do Placar</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Roboto", sans-serif;
+            background: #013c4e;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+            width: 100vw;
+            align-items: center;
+        }
+
+        .card {
+            display: block;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            /* shadow: 0 4px 6px rgba(0, 0, 0, 0.3);*/
+            width: 100%;
+            max-width: 70%;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .placar-set {
+            display: block;
+            justify-content: space-around;
+            align-items: center;
+            margin: 20px 0;
+        }
+
+        *.time-box {
+            display: inline-block;
+            width: 45%;
+        }
+
+        button {
+            padding: 10px;
+            font-size: 20px;
+            cursor: pointer;
+            border: none;
+            border-radius: 8px;
+            margin: 5px;
+            font-weight: bold;
+        }
+
+        .btn-gols {
+            background: #007bff;
+            color: white;
+            width: 60px;
+            font-size: 35px;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+            width: 60px;
+            font-size: 35px;
+         
+
+        }
+
+        .btn-start {
+            background: #28a745;
+            color: white;
+            width: 100%;
+            font-size: 22px;
+            margin-top: 15px;
+        }
+
+        input {
+            width: 90%;
+            font-size: 16px;
+            padding: 8px;
+            margin: 5px 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .label-button {
+            display: flex;
+            justify-content: row;
+            gap: 10px;
+            align-items: center;
+            margin: 15px 10px;
+        }
+
+        .move-score-casa,
+        .move-score-visitante {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 10px;
+            margin: 0 auto;
+            width: 40%;
+        }
+
+        label {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin: 5px 14px;
+            border-radius: 5px;
+            font-size: 16px;
+            width: 80%;
+        }
+
+        #tempoJogo {
+            width: 40%;
+            height: auto;
+            font-size: 16px;
+        }
+
+        #nomeTimeA,
+        #nomeTimeB {
+            font-size: 22px;
+            width: 90%;
+            padding: 5px 0;
+        }
+
+        #golsAA,
+        #golsBB {
+            font-size: 35px;
+            width: 50%;
+            margin: 10px 10px;
+        }
+
+        #displayCronometro {
+            font-size: 48px;
+            margin: 10px 0;
+            color: #333;
+        }
+
+        button:hover {
+            opacity: 0.8;
+        }
+
+        button:active {
+            opacity: 0.5;
+        }
+
+        @media screen and (max-width: 700px) {
+            .card {
+                max-width: 95%;
+            }
+
+            .placar-set {
+                flex-direction: column;
+            }
+
+            .time-box {
+                width: 100%;
+                margin-bottom: 15px;
+            }
+
+            #displayCronometro {
+                font-size: 40px;
+            }
+
+            .label-button {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="card">
+        <h2>CONTROLE DE TRANSMISSÃO</h2>
+
+        <div id="displayCronometro">00:00</div>
+        <button id="btnPlay" class="btn-start" onclick="alternarCronometro()">Iniciar</button>
+        <button class="btn-start" style="background: #dc3545;" onclick="resetarCronometro()" style="width: 100%;">Resetar Cronômetro</button>
+
+        <div class="placar-set">
+            <div class="time-box">
+                <strong id="nomeTimeA">Time A</strong><br>
+                <div class="-move-score-casa">
+                    <button class="btn-gols" onclick="mudarGols('golsA', 1)">+</button>
+                    <strong id="golsAA">0</strong>
+                    <button class="btn-danger" onclick="mudarGols('golsA', -1)">-</button>
+                </div>
+            </div>
+            <div class="time-box">
+                <strong id="nomeTimeB">Time B</strong><br>
+                <div class="-move-score-visitante">
+                    <button class="btn-gols" onclick="mudarGols('golsB', 1)">+</button>
+                    <strong id="golsBB">0</strong>
+                    <button class="btn-danger" onclick="mudarGols('golsB', -1)">-</button>
+                </div>
+            </div>
+
+            <hr>
+            <hr>
+            <input type="text" id="inputA" placeholder="Nome Time Casa">
+            <input type="text" id="inputB" placeholder="Nome Time Visitante">
+            <div class="label-button">
+                <label>Tempo do Jogo: <select id="tempoJogo">
+                        <option value="1T">1º Tempo</option>
+                        <option value="2T">2º Tempo</option>
+                    </select>
+                </label>
+                <input type="number" id="inputAcrescimo" placeholder="Minutos de Acréscimo">
+            </div>
+            <button onclick="atualizarNomesEAcrescimo()"
+                style="width:100%; background: #6c757d; color: white;">Atualizar
+                Nomes / Acréscimo</button>
+            <button onclick="toggleAcrescimo(true)" style="background: #06e711;">Mostrar Acréscimo</button>
+            <button onclick="toggleAcrescimo(false)" style="background: #ffc107;">Esconder</button>
+        </div>
+
+        <!-- Scripts Firebase -->
+        <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+
+        <script>
+            // --- COLOQUE SEUS DADOS AQUI ---
+            const firebaseConfig = {
+                apiKey: "AIzaSyCHKTA-mgIuWcVypfDkGrNhxtsynrUtq1Y",
+                authDomain: "placar-live-53cc0.firebaseapp.com",
+                projectId: "placar-live-53cc0",
+                databaseURL: "https://placar-live-53cc0-default-rtdb.firebaseio.com",
+                storageBucket: "placar-live-53cc0.firebasestorage.app",
+                messagingSenderId: "291622264576",
+                appId: "1:291622264576:web:1ca81d1333e4b0cb7b1de5",
+                measurementId: "G-ZJPHJ42ECV"
+
+                /*apiKey: "SUA_API_KEY",
+                authDomain: "SEU_PROJETO.firebaseapp.com",
+                databaseURL: "https://placar-live-53cc0-default-rtdb.firebaseio.com",
+                projectId: "SEU_PROJETO",
+                storageBucket: "SEU_PROJETO.appspot.com",
+                messagingSenderId: "ID",
+                appId: "ID"*/
+            };
+            // ------------------------------
+
+            firebase.initializeApp(firebaseConfig);
+            const db = firebase.database();
+            const placarRef = db.ref('placar');
+
+            let segundosLocais = 0;
+            let intervalo = null;
+
+            // Sincroniza com o banco ao abrir a página
+            placarRef.on('value', (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    segundosLocais = data.segundos || 0;
+                    document.getElementById('nomeTimeA').innerText = data.timeA || "Time A";
+                    document.getElementById('nomeTimeB').innerText = data.timeB || "Time B";
+                    document.getElementById('golsAA').innerText = data.golsA || 0;
+                    document.getElementById('golsBB').innerText = data.golsB || 0;
+                    atualizarVisor(segundosLocais);
+                }
+            });
+
+            function alternarCronometro() {
+                const btn = document.getElementById('btnPlay');
+                if (intervalo) {
+                    clearInterval(intervalo);
+                    intervalo = null;
+                    btn.innerText = "Iniciar";
+                    placarRef.update({ rodando: false });
+                } else {
+                    btn.innerText = "Pausar";
+                    placarRef.update({ rodando: true });
+                    intervalo = setInterval(() => {
+                        segundosLocais++;
+                        placarRef.update({ segundos: segundosLocais });
+                    }, 1000);
+                }
+            }
+
+            function mudarGols(campo, valor) {
+                placarRef.child(campo).transaction((atual) => (atual || 0) + valor);
+            }
+
+            function atualizarNomesEAcrescimo() {
+                const nA = document.getElementById('inputA').value;
+                const nB = document.getElementById('inputB').value;
+                const nC = document.getElementById('tempoJogo').value;
+                const ac = document.getElementById('inputAcrescimo').value;
+                const updates = {};
+                if (nA) updates.timeA = nA;
+                if (nB) updates.timeB = nB;
+                if (nC) updates.tempo = nC;
+                if (ac) updates.minutosAcrescimo = ac;
+                placarRef.update(updates);
+            }
+
+            function toggleAcrescimo(visivel) {
+                placarRef.update({ mostrarAcrescimo: visivel });
+            }
+
+            function resetarCronometro() {
+                if (confirm("Zerar o tempo?")) {
+                    segundosLocais = 0;
+                    placarRef.update({ segundos: 0, rodando: false });
+                    if (intervalo) alternarCronometro();
+                }
+            }
+
+            function atualizarVisor(s) {
+                const min = Math.floor(s / 60).toString().padStart(2, '0');
+                const seg = (s % 60).toString().padStart(2, '0');
+                document.getElementById('displayCronometro').innerText = min + ":" + seg;
+            }
+
+
+        </script>
+</body>
+
+</html>
